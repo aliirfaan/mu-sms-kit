@@ -16,6 +16,8 @@ class SmsTest extends TestCase
 
     private $senderId = 'test';
 
+    private $apiUrl = 'test';
+
     public function providerTestSmsWasSent()
     {
         return array(
@@ -47,7 +49,7 @@ class SmsTest extends TestCase
      */
     public function testSmsWasSent($transactionReference, $expectedResult)
     {
-        $sms = new Sms($this->username, $this->password, $this->senderId);
+        $sms = new Sms($this->username, $this->password, $this->senderId, $this->apiUrl);
 
         $result = $sms->smsWasSent($transactionReference);
         $this->assertEquals($expectedResult, $result['success']);
@@ -58,7 +60,7 @@ class SmsTest extends TestCase
      */
     public function testGetTransactionReference($response, $expectedResult)
     {
-        $sms = new Sms($this->username, $this->password, $this->senderId);
+        $sms = new Sms($this->username, $this->password, $this->senderId, $this->apiUrl);
 
         $result = $sms->getTransactionReference($response);
         $this->assertEquals($expectedResult, $result);

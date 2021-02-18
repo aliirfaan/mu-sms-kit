@@ -1,41 +1,14 @@
 # Send SMS
-Helper class to work with my.t SMS gateway
+Helper class to work with Mauritius operator SMS gateway. Note that you need credentials to be able to use this package.
 
 ## Features
-- Send SMS using BMP API
+- Send SMS using operator API
 - Get transaction reference, error code and description as response
 
 ## Installation
 
-### Authorizing composer using auth.json file
-
-- Create a new file called `auth.json` in your project root directory and add the following to it.
-- Replace your-github-token with your github token.
-- **You should never commit this file to github. Doing so will give unauthorized users access to your github repositories if the token is compromised.**
-
 ```bash
-{
-    "github-oauth": {
-        "github.com": "your-github-token"
-    }
-}
-```
-
-- Open `composer.json` file in your project and add the following code to it.
-
-```bash
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/your-github-username/your-repository-name"
-        }
-    ]
-```
-
-### Install the latest version with
-
-```bash
-$ composer require mt/sms
+$ composer require aliirfaan/mu-sms-kit
 ```
 
 ## Basic Usage
@@ -45,16 +18,16 @@ $ composer require mt/sms
 
 require 'vendor/autoload.php';
 
-use  Mt\Sms\MytSms;
+use  Aliirfaan\SmsKit\Sms;
 
-// instantiate class
-$mytSms = new MytSms('my_username', 'my_password', 'my_sender_id');
+// instantiate class with your credentials
+$sms = new Sms('my_username', 'my_password', 'my_sender_id', 'my_api_endpoint');
 
 // use
 $message = 'Hello';
 $phoneNumber = '23057777777';
 
-$sendSms = $mytSms->sendSms($phoneNumber, $message);
+$sendSms = $sms->sendSms($phoneNumber, $message);
 ```
 
 ### Requirements
