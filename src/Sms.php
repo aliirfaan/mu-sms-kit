@@ -163,10 +163,15 @@ class Sms
      * smsWasSent
      *
      * Read transaction reference to see if sms was actually sent or we got an error code
+     * Check if transaction reference exists in error code list
+     * Check if transaction reference is blank
+     * Check if transaction reference satifies a minimum length as successful transaction reference is long. Example: 0306201020101331756371100
+     * 
      * @param  string $transactionReference
+     * @param  int $validTransactionReferenceMinLength Minimum lenght of a valid transaction reference number
      * @return array
      */
-    public function smsWasSent($transactionReference)
+    public function smsWasSent($transactionReference, $validTransactionReferenceMinLength = 5)
     {
         $data = array(
             'success' => false,
@@ -177,6 +182,8 @@ class Sms
             $data['message'] = 'SMS was not sent. Code: '.$transactionReference.' Description: '.GatewayResponse::statusTexts[$transactionReference];
         } elseif ($transactionReference == '') {
             $data['message'] = 'SMS was not sent. An unknown error occured';
+        } elseif (strlen($transactionReference) < $validTransactionReferenceMinLength) {
+            $data['message'] = 'SMS was not sent. '.$transactionReference.' is not an error code and does not satisfy minimum length';
         } else {
             $data['message'] = $transactionReference;
             $data['success'] = true;
