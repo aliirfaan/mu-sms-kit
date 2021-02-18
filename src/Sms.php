@@ -121,7 +121,9 @@ class Sms
                 } else {
                     $result = trim($result);
 
-                    $smsWasSent = $this->smsWasSent($result);
+                    $transactionReference = $this->getTransactionReference($result);
+                    $smsWasSent = $this->smsWasSent($transactionReference);
+
                     $data['result'] = $result;
                     $data['success'] =  $smsWasSent['success'];
                     $data['message'] = $smsWasSent['message'];
