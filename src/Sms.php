@@ -66,9 +66,10 @@ class Sms
      * @param  string $deferred
      * @param  string $dsr
      * @param  int $connectTimeoutSeconds Number of seconds that cURL should timeout
+     * @param  array $curlOptions PHP supported cURL options https://www.php.net/manual/en/curl.constants.php Will take these options to setup cUrl if provided
      * @return array $data
      */
-    public function sendSms($phoneNumber, $message, $concatenated = 1, $deferred = 'false', $dsr = 'true', $connectTimeoutSeconds = 60)
+    public function sendSms($phoneNumber, $message, $concatenated = 1, $deferred = 'false', $dsr = 'true', $connectTimeoutSeconds = 60, $curlOptions = null)
     {
         $data = array(
             'result' => null,
@@ -86,24 +87,29 @@ class Sms
             'Deferred' => $deferred,
             'Dsr' => $dsr
         );
-        $data['params'] = $smsParams;
 
         $requestParams = http_build_query($smsParams);
         $requestUrl = $this->apiUrl . '?' . $requestParams;
 
         try {
             $curl = curl_init();
+
+            $curlSetupOptions = array(
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_FAILONERROR  => 1,
+                CURLOPT_CONNECTTIMEOUT  => $connectTimeoutSeconds,
+                CURLOPT_URL => $requestUrl
+            );
+
+            if (!is_null($curlOptions)) {
+                $curlSetupOptions = $curlOptions;
+            }
+
             curl_setopt_array(
                 $curl,
-                array(
-                    CURLOPT_RETURNTRANSFER => 1,
-                    CURLOPT_FAILONERROR  => 1,
-                    CURLOPT_CONNECTTIMEOUT  => $connectTimeoutSeconds,
-                    CURLOPT_URL => $requestUrl,
-                    CURLOPT_NOBODY => 1,
-                    CURLOPT_HEADER => 1
-                )
+                $curlSetupOptions
             );
+            
             $result = curl_exec($curl);
             if (!$result) {
                 $data['message'] = 'Error: ' . curl_error($curl) . ' - Code: ' . curl_errno($curl);
