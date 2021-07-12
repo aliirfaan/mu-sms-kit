@@ -142,13 +142,14 @@ class Sms
      *
      * Response is usually in this format: 23057713610-0306201020101331756371100
      * We explode at '-' to get transaction reference
+     * We may also get response without '-'. Example: 91, 106
      *
      * @param  string $response
      * @return string transaction reference
      */
     public function getTransactionReference($response)
     {
-        $transactionReference = null;
+        $transactionReference = $response;
 
         $responsePieces = explode('-', $response);
         if (\array_key_exists(1, $responsePieces)) {
